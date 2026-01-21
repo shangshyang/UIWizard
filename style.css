@@ -58,7 +58,7 @@ html, body {
 /*    content: "▼";*/
 	content: "";
 	display: inline-block;
-	background-image: url(img/P3_right-arrow.png);
+	background-image: url(./P3_right-arrow.png);
 	width: 16px;
 	height: 16px;
 	background-size: cover;
@@ -72,7 +72,7 @@ html, body {
 /*	content: "▶";*/
 	content: "";
 	display: inline-block;
-	background-image: url(img/P3_down-arrow.png);
+	background-image: url(./P3_down-arrow.png);
 	width: 16px;
 	height: 16px;
 	background-size: cover;
@@ -110,7 +110,7 @@ html, body {
 .menu-folder h3:nth-of-type(1):before{
     content: "";
 	display: inline-block;
-	background-image: url(img/wizard.gif);
+	background-image: url(./wizard.gif);
 	width: 16px;
 	height: 16px;
 	background-size: cover;
