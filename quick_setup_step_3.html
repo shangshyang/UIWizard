@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Quick Setup - Step 3: Time Configuration</title>
+    <style>
+        body {
+            background: url('../right_frame.gif') repeat;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 660px;
+            margin: 20px auto;
+			table-layout: auto;
+        }
+         td { 
+            border: 2px solid #555; 
+            padding: 8px; 
+            text-align: left; 
+            font-size: 14px;
+            font-weight: bold
+        }
+        input[type="text"] {
+            padding: 5px;
+        }
+        select { padding: 5px; }
+        input[type="button"] {
+            padding: 6px 15px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            font-size: 15px;
+            background: #304b67; 
+        }
+        div[align="center"] { text-align: center; }
+        div[align="right"] { text-align: right; padding-right: 10px; }
+        .style1 { 
+            font-weight: bold; 
+            color: #2c3e50; 
+            font-size: 14px; 
+            margin: 10px 0; 
+            text-align: left;
+        }
+        .nav-buttons {
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+        }
+    </style>
+    <script language="JavaScript" src="../focus.js"></script>
+    <script language="JavaScript">
+        (function(){
+            function load(){
+                var forms = document.getElementsByTagName('form');
+                for(var i = 0 ; i < forms.length ; i++){
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'c_t');
+                    input.setAttribute('value', 'c7b611dca61d4991b0add97309a4a168');
+                    forms[i].appendChild(input);
+                }
+            }
+            window[ window.addEventListener ? 'addEventListener' : 'attachEvent' ]( window.addEventListener ? 'load' : 'onload', load )
+        })()
+
+        function check_year(obj) { var year_val = parseInt(obj.value); if((year_val < 2000) || (year_val > 2037)) { alert("Input year error "); obj.focus(); obj.select(); return false; } return true; }
+        function check_month(obj) { var month_val = parseInt(obj.value); if((month_val < 1) || (month_val > 12)) { alert("Input month error "); obj.focus(); obj.select(); return false; } return true; }
+        function check_day(obj) { var day_val = parseInt(obj.value); if((day_val < 1) || (day_val > 31)) { alert("Input day error "); obj.focus(); obj.select(); return false; } return true; }
+        function check_hour(obj) { var hour_val = parseInt(obj.value); if((hour_val < 0) || (hour_val > 23)) { alert("Input hour error "); obj.focus(); obj.select(); return false; } return true; }
+        function check_minute(obj) { var minute_val = parseInt(obj.value); if((minute_val < 0) || (minute_val > 59)) { alert("Input minute error "); obj.focus(); obj.select(); return false; } return true; }
+        function check_second(obj) { var second_val = parseInt(obj.value); if((second_val < 0) || (second_val > 59)) { alert("Input second error "); obj.focus(); obj.select(); return false; } return true; }
+
+        function goToPrevStep() {
+            parent.mainFrame.location.href = 'quick_setup_step_2.html';
+        }
+
+        function goToNextStep() {
+            // 驗證手動時間欄位
+            if (!check_year(document.querySelector('input[name="yearnumber"]')) ||
+                !check_month(document.querySelector('input[name="monthnumber"]')) ||
+                !check_day(document.querySelector('input[name="daynumber"]')) ||
+                !check_hour(document.querySelector('input[name="hournumber"]')) ||
+                !check_minute(document.querySelector('input[name="minutenumber"]')) ||
+                !check_second(document.querySelector('input[name="secondnumber"]'))) {
+                return false;
+            }
+            parent.mainFrame.location.href = 'quick_setup_step_4.html'; // 或 quick_setup_complete.html
+        }
+    </script>
+</head>
+<body>
+    <p class="style1">Step 3: Time Configuration</p>
+
+    <!-- 手動調整 RTC 時間 -->
+    <form name="form4" method="post">
+        <table border="1" cellspacing="0" width="660" align="left">
+            <tr bgcolor="#CCCCCC">
+                <td colspan="7"><div align="center">Adjust RTC Time</div></td>
+            </tr>
+            <tr>
+                <td><div align="center">Year(2000-2037):<input name="yearnumber" onblur="check_year(this)" type="text" value="2026" size="5" maxlength="4"></div></td>
+                <td><div align="center">Month:<input name="monthnumber" onblur="check_month(this)" type="text" value="5" size="3" maxlength="2"></div></td>
+                <td><div align="center">Day:<input name="daynumber" onblur="check_day(this)" type="text" value="2" size="3" maxlength="2"></div></td>
+                <td><div align="center">Sat</div></td>
+                <td><div align="center">Hour:<input name="hournumber" onblur="check_hour(this)" type="text" value="2" size="3" maxlength="2"></div></td>
+                <td><div align="center">Minute:<input name="minutenumber" onblur="check_minute(this)" type="text" value="30" size="3" maxlength="2"></div></td>
+                <td><div align="center">Second:<input name="secondnumber" onblur="check_second(this)" type="text" value="21" size="3" maxlength="2"></div></td>
+            </tr>
+<!--        </table>
+    </form>-->
+
+    <!-- NTP Client Setting（唯一保留的表單，放 Prev/Next 按鈕） -->
+<!--    <form name="form1" method="post">
+        <table border="1" cellspacing="0" width="660" align="left">-->
+            <tr><td colspan="7" bgcolor="#cccccc"><div align="center">NTP Client Setting</div></td></tr>
+            <tr><td width="200" colspan="2">NTP Client</td><td colspan="5"><select name="ntpmode"><option value="0">Disable</option><option value="1" selected>Enable</option></select></td></tr>
+            <tr><td colspan="2">NTP Server 1<br>(IP or Domain)</td><td colspan="5"><input type="text" size="30" name="ntpserverip0" value="172.16.1.1" maxlength="60"></td></tr>
+            <tr><td colspan="2">NTP Server 2<br>(IP or Domain)</td><td colspan="5"><input type="text" size="30" name="ntpserverip1" value="192.168.1.254" maxlength="60"></td></tr>
+            <tr><td colspan="2">Time Zone</td><td colspan="5">
+                <select name="timezonemode">
+                    <option value="UCT12">(GMT-12:00) Eniwetok, Kwajalein</option>
+                    <option value="UCT11">(GMT-11:00) Midway Island, Samoa</option>
+                    <option value="UCT10">(GMT-10:00) Hawaii</option>
+                    <option value="NAST9">(GMT-09:00) Alaska</option>
+                    <option value="PST8">(GMT-08:00) Pacific Time (US and Canada); Tijuana</option>
+                    <option value="MST7">(GMT-07:00) Mountain Time (US and Canada)</option>
+                    <option value="CST6MEX">(GMT-06:00) Central Time (US & Canada)</option>
+                    <option value="UCT5">(GMT-05:00) Eastern Time (US & Canada)</option>
+                    <option value="TTST4">(GMT-04:00) Caracas, La Paz</option>
+                    <option value="UCT3">(GMT-03:00) Buenos Aires, Georgetown</option>
+                    <option value="UCT2">(GMT-02:00) Mid-Atlantic</option>
+                    <option value="UCT1">(GMT-01:00) Cape Verde Islands</option>
+                    <option value="GMT0BST">(GMT) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London</option>
+                    <option value="MET-1">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
+                    <option value="IST-2">(GMT+02:00) Jerusalem</option>
+                    <option value="MST-3">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
+                    <option value="UAEST-4">(GMT+04:00) Abu Dhabi, Muscat</option>
+                    <option value="UCT-5">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+                    <option value="UCT-5:30">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
+                    <option value="UCT-5:45">(GMT+05:45) Katmandu</option>
+                    <option value="RFT-6">(GMT+06:00) Almaty, Novosibirsk</option>
+                    <option value="UCT-6:30">(GMT+06:30) Yangon Rangoon</option>
+                    <option value="UCT-7">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+                    <option value="UCT-8" selected>(GMT+08:00) Taiwan, Beijing, Chongqing, Hong Kong SAR, Perth, Urumqi</option>
+                    <option value="ACWST-8:45">(GMT+08:45) Eucla</option>
+                    <option value="UCT-9">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
+                    <option value="UCT-9:30">(GMT+09:30) Darwin</option>
+                    <option value="EST-10">(GMT+10:00) Canberra, Melbourne, Sydney</option>
+                    <option value="AEST-10">(GMT+10:00) Brisbane</option>
+                    <option value="LHST-10:30">(GMT+10:30) Lord Howe</option>
+                    <option value="UCT-11">(GMT+11:00) Magadan, Solomon Islands, New Caledonia</option>
+                    <option value="NZST-12">(GMT+12:00) Auckland, Wellington</option>
+                    <option value="UCT-13">(GMT+13:00) Nuku'alofa</option>
+                </select>
+            </td></tr>
+            <tr><td colspan="2">Current Time</td><td colspan="5">Thu Dec 18 16:30:19 UTC 2025</td></tr>
+            <tr>
+                <td colspan="7" class="nav-buttons">
+                    <input type="button" value="Prev. Step" onclick="goToPrevStep()">
+                    <input type="button" value="Next Step" onclick="goToNextStep()">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
