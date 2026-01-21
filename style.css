@@ -1,0 +1,164 @@
+/* style.css - EtherWAN 官方風格 + 響應式 + 純 CSS 圖示（語法 100% 正確） */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+    height: 100%;
+	width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000;
+    background: #f0f0f0;
+}
+
+/* ==================== 左側菜單 ==================== */
+#sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: #2c3e50;
+    padding: 1px 0;
+    box-sizing: border-box;
+    color: #ecf0f1;
+}
+
+/* Menu Folder 樣式 */
+.menu-folder {
+    padding: 10px 20px;
+    background: #34495e;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 1px solid #f0f0f0;	/* #2470b1; */
+    position: relative;
+    user-select: none;
+}
+.menu-folder:nth-of-type(1){
+    background-color: #455fb5;
+  
+}
+
+/* 在 menu-folder 增加一個 h3 物件描述，單純額外作為 Setup Wizard 文字的顏色調整 */
+.menu-folder h3 {
+    animation: flickerColor 1.5s infinite alternate ease-in-out;	/* 動畫名稱、時間、無限循環、交替 */
+}
+
+/* 定義動畫 */
+@keyframes flickerColor {
+    0% {
+        color: #fff8dc; /* 白色偏淡黃色 (Cornsilk) */
+    }
+    100% {
+        color: #ffa81e; /* 淺黃色 (原始指定色) */
+    }
+}
+
+.menu-folder:hover {
+    background: #388dd6;
+}
+
+.menu-folder::after {
+/*    content: "▼";*/
+	content: "";
+	display: inline-block;
+	background-image: url(img/P3_right-arrow.png);
+	width: 16px;
+	height: 16px;
+	background-size: cover;
+    position: absolute;
+    right: 18px;
+    top: 10px;
+    transition: transform 0.2s;
+}
+
+.menu-folder.collapsed::after {
+/*	content: "▶";*/
+	content: "";
+	display: inline-block;
+	background-image: url(img/P3_down-arrow.png);
+	width: 16px;
+	height: 16px;
+	background-size: cover;
+	position: absolute;
+    right: 18px;
+    top: 10px;
+	transition: transform 0.5s;
+}
+
+.submenu {
+    background: #3e5771;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.submenu.active {
+    max-height: 6000px; /* 足夠大 */
+}
+
+.menu-item {
+    padding: 8px 20px 8px 40px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background: #388dd6;
+    color: #fff;
+    position: relative;
+}
+
+.menu-folder h3:nth-of-type(1):before{
+    content: "";
+	display: inline-block;
+	background-image: url(img/wizard.gif);
+	width: 16px;
+	height: 16px;
+	background-size: cover;
+	margin-right: 0px;
+	margin-top: 0px;
+}
+/* ==================== 右側內容通用樣式 ==================== */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 15px 0;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background: #d8d8d8;
+}
+
+/* ==================== 響應式調整（針對 frameset） ==================== */
+@media (max-width: 768px) {
+    frameset > frameset > frame[name="leftFrame"] {
+        width: 100% !important;
+        height: 40% !important;
+    }
+    frameset > frameset > frame[name="mainFrame"] {
+        width: 100% !important;
+        height: 60% !important;
+    }
+}
+
+@media (min-width: 769px) {
+    frameset > frameset > frame[name="leftFrame"] {
+        width: 220px !important;
+    }
+}
+
+/* ==================== 高亮與動畫微調 ==================== */
+.menu-item.active {
+    background: #388dd6;
+    font-weight: bold;
+}
+
+/* 讓手機滾動更順 */
+#leftFrame, #mainFrame {
+    -webkit-overflow-scrolling: touch;
+}
