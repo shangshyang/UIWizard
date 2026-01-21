@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Quick Setup - Step 5: Logging Configuration & Review</title>
+    <style>
+        body {
+            background: url('../right_frame.gif') repeat;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 450px;
+            margin: 20px auto;
+        }
+        td { 
+            border: 2px solid #555; 
+            padding: 8px; 
+            text-align: left; 
+            font-size: 14px;
+            font-weight: bold
+        }
+        select, input[type="text"] {
+            padding: 5px;
+        }
+        input[type="button"] {
+           padding: 6px 15px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            font-size: 15px;
+            background: #304b67; 
+        }
+        div[align="center"] { text-align: center; }
+        div[align="right"] { text-align: right; padding-right: 10px; }
+        .style1 { 
+            font-weight: bold; 
+            color: #2c3e50; 
+            font-size: 14px; 
+            margin: 10px 0; 
+            text-align: left;
+        }
+        .nav-buttons {
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+        }
+        .log-entry {
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 11px;
+        }
+    </style>
+    <script language="JavaScript" src="../focus.js"></script>
+    <script language="JavaScript">
+        (function(){
+            function load(){
+                var forms = document.getElementsByTagName('form');
+                for(var i = 0 ; i < forms.length ; i++){
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'c_t');
+                    input.setAttribute('value', '8736ed14818e44aa80458caa904b4a27'); // 使用第一個頁面的 c_t
+                    forms[i].appendChild(input);
+                }
+            }
+            window[ window.addEventListener ? 'addEventListener' : 'attachEvent' ]( window.addEventListener ? 'load' : 'onload', load )
+        })()
+
+        function check_ip(obj) {
+            var errorStr = " is not valid";
+            var ipPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+            var ipArray = obj.value.match(ipPattern);
+            if(obj.value=='0.0.0.0' || obj.value=="255.255.255.255") {
+                alert("IP address: " + obj.value + errorStr);
+                obj.focus(); obj.select(); return false;
+            }
+            if(obj.value=='') return true;
+            if(ipArray==null) {
+                alert("IP address: " + obj.value + errorStr);
+                obj.focus(); obj.select(); return false;
+            }
+            for(var i=0;i<4;i++) {
+                if(ipArray[i] > 255) {
+                    alert("IP address: " + obj.value + errorStr);
+                    obj.focus(); obj.select(); return false;
+                }
+            }
+            return true;
+        }
+
+        // Prev / Finish 按鈕
+        function goToPrevStep() {
+            parent.mainFrame.location.href = 'quick_setup_step_4.html';
+        }
+
+        function goToFinish() {
+            alert("Quick Setup completed! All settings are now applied.\nPlease log in again for the changes to take effect.");
+            parent.mainFrame.location.href = 'system_info.html';
+        }
+    </script>
+</head>
+<body>
+    <p class="style1">Step 5: Logging Configuration & Review</p>
+
+    <!-- System Log Setting -->
+    <form name="display_status" method="post">
+        <table width="450" border="1" cellspacing="0" align="left">
+            <tr bgcolor="#CCCCCC"><td colspan="2"><div align="center">System Log Setting</div></td></tr>
+            <tr bgcolor="#CCCCCC"><td align="center" colspan="2"><div align="center">Permanent Memory(Flash)</div></td></tr>
+            <tr><td width="45%"><div align="left">Severity Level</div></td>
+                <td><div align="center">
+                    <select name="permanent_severity">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4" selected>4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </div></td>
+            </tr>
+            <tr bgcolor="#CCCCCC"><td align="center" colspan="2"><div align="center">Memory</div></td></tr>
+            <tr><td width="45%"><div align="left">Severity Level</div></td>
+                <td><div align="center">
+                    <select name="memory_severity">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4" selected>4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </div></td>
+            </tr>
+            <tr bgcolor="#CCCCCC"><td align="center" colspan="2"><div align="center">Log Display</div></td></tr>
+            <tr><td width="45%"><div align="left">View Messages From</div></td>
+                <td><div align="center">
+                    <input name='display' value='1' type='radio'>Flash
+                    <input name='display' value='0' type='radio' checked>Memory
+                </div></td>
+            </tr>
+            <tr><td width="45%"><div align="left">Auto Refresh</div></td>
+                <td><div align="center">
+                    <select name="web_timeout">
+                        <option value="disable" selected>Disable</option>
+                        <option value="1">1 mins</option>
+                        <option value="2">2 mins</option>
+                        <option value="5">5 mins</option>
+                        <option value="10">10 mins</option>
+                    </select>
+                </div></td>
+            </tr>
+<!--        </table>
+    </form>-->
+
+    <!-- Remote Logging -->
+<!--    <form name="rlstatus" method="post">
+        <table width="660" border="1" cellspacing="0" align="left" style="margin-top:30px;">-->
+            <tr bgcolor="#CCCCCC"><td colspan="2"><div align="center">Remote Logging</div></td></tr>
+            <tr><td width="35%"><div align="left">Status</div></td>
+                <td><div align="center">
+                    <input name='rlog' value='1' type='radio'>Enable
+                    <input name='rlog' value='0' type='radio' checked>Disable
+                </div></td>
+            </tr>
+<!--        </table>
+    </form>-->
+
+<!--    <form name="addip" method="post">
+        <table width="660" border="1" cellspacing="0" align="left" style="margin-top:20px;">-->
+            <tr><td width="45%" bgcolor="#cccccc"><div align="center">Syslog Server IP</div></td>
+                <td><div align="center"><input id="ipaddrs" name="ipaddrs" type="text" size="16" maxlength="15"></div></td>
+            </tr>
+            <tr><td bgcolor="#cccccc"><div align="center">Port</div></td>
+                <td><div align="center"><input name="udp_port" type="text" value="" size="5" maxlength="15">&nbsp;Default: 514</div></td>
+            </tr>
+            <tr><td bgcolor="#cccccc"><div align="center">TLS</div></td>
+                <td><div align="center">
+                    <input name='tls' value='1' type='radio' checked>Enable
+                    <input name='tls' value='0' type='radio'>Disable
+                </div></td>
+            </tr>
+			<!-- Prev / Finish 按鈕放在最底部 -->
+            <tr>
+                <td colspan="2" class="nav-buttons">
+                    <input type="button" value="Prev. Step" onclick="goToPrevStep()">
+					<input type="button" value="Finish" onclick="goToFinish()">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+</html>
