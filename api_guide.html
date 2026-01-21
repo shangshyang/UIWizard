@@ -1,0 +1,214 @@
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>RESTful API Wizard</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 0; display: flex; }
+    .sidebar { height: 888px; width: 250px; background: #2c3e50; color: #fff; padding: 20px; }
+    .sidebar h3 { margin-top: 20px; color: #f39c12; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .menu-item {
+        padding: 10px;
+        transition: background 0.3s ease;
+    }
+    .menu-item:hover {
+        background: #4aa3f0; /* 滑鼠移動時底色 */
+        cursor: pointer;
+    }
+    .menu-item.active {
+        background: #388dd6; /* 選中項目高亮 */
+        font-weight: bold;
+        color: #fff;
+    }
+    .help-box {
+        flex: 1;
+        margin-top: 20px;
+        padding: 10px;
+        /* background: #388dd6; */
+        color: #388dd6;
+        font-size: 14px;
+        border-radius: 5px;
+		/* min-height: 50px; */
+        opacity: 1;
+        transition: opacity 0.5s ease; /* 淡入淡出動畫 */
+    }
+    .content { flex: 1; padding: 20px; }
+    .api-block { margin-bottom: 20px; }
+    .api-block button { padding: 8px 12px; margin-bottom: 10px; }
+    .copy-btn { margin-left: 10px; padding: 6px 10px; background: #3498db; color: #fff; border: none; cursor: pointer; }
+    .result { background: #ecf0f1; padding: 10px; margin-top: 5px; font-family: monospace; white-space: pre-wrap; }
+    .ip-input, .port-input { margin-bottom: 20px; }
+
+    /* Loading 旋轉圖示 */
+    .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #ccc;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 8px;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+<div class="sidebar">
+    <h3>RESTful API Guider</h3>
+    <ul>
+        <li class="menu-item" 
+            onmouseover="showHelp('Login / 登入： \n使用 POST /api/auth/login 提供帳號密碼登入。 \n<重要>使用者必須先成功 Login 登入並取得 Token 放在其它 API CMD 內作為使用。 \n\nLogout / 登出：\n使用 POST /api/auth/logout 結束會話。 \n\n安全性機制：支援 Header 驗證（包含 x-request-key: ewapi 及 Authorization: Bearer <token>）。')"
+            onmouseout="resetHelp()" 
+            onclick="showCategory('type1')">類型1: Login / Logout</li>
+        <li class="menu-item" 
+            onmouseover="showHelp('使用 GET APIs 讀取交換機設備的設定值與狀態。')" 
+            onmouseout="resetHelp()" 
+            onclick="showCategory('type2')">類型2: GET APIs</li>
+        <li class="menu-item" 
+            onmouseover="showHelp('使用 POST APIs 設定交換機設備的功能。')" 
+            onmouseout="resetHelp()" 
+            onclick="showCategory('type3')">類型3: POST APIs</li>
+    </ul>
+    <!-- Help and Tips 視窗 -->
+    <div class="help-box" id="helpBox">About this RESTful API feature: <br>The EtherWAN switch provides an application programming interface (API) follow the REST principles architectural style for web services. Through the the defination of parameters whthin the switch, assist developers to implement applications can communicate with their applications programmatically enables integration with other software systems. <br><br>關於此 RESTful API 功能: <br>EtherWAN 交換器提供了一個遵循 REST 原則架構風格的 Web 服務應用程式介面(API)。透過在交換器中定義參數，可以幫助開發人員實現以應用程式設計方式與益網的交換機設備進行參數的讀取與設定，從而實現與其他軟體系統的自動化整合應用。</div>
+</div>
+<div class="content" id="contentArea">
+    <h2>請選擇左側 API 命令類型</h2>
+    <div class="ip-input">
+        <label>請輸入設備 IP Address：</label>
+        <input type="text" id="ipAddress" placeholder="例如：192.168.1.10" oninput="updateIp()">
+    </div>
+    <div class="port-input">
+        <label>請輸入 Interface/Port ID：</label>
+        <input type="text" id="portId" placeholder="例如：5005" oninput="updatePortId()">
+    </div>
+</div>
+
+<script>
+// 預設 IP 和 Port ID
+let userIp = "192.168.1.10";
+let userPortId = "5005";
+
+// Mock Data + 每個 API CMD 的個別說明 tip
+const apiData = {
+    type1: [
+        { name: "Login", cmd: "POST {{url}}/api/auth/login", tip: "Login：使用帳號密碼登入並取得 Token，後續 API 需帶 Token 驗證。", response: { data: { token: "0cda9bd19273409cac548d66fa8eab79" } } },
+        { name: "Logout", cmd: "POST {{url}}/api/auth/logout", tip: "Logout：結束會話並使 Token 失效。", response: { message: "success" } }
+    ],
+    type2: [
+        { name: "Device Info", cmd: "GET {{url}}/api/device/basic", tip: "Device Info：取得設備基本資訊，如系統名稱、韌體版本、MAC 位址。", response: { message: "", data: { sysName: "sw739x_205", firmwareVersion: "5.06.1.10", macAddress: "00e0.b347.afc8", productSeries: "73934X-SFP" } } },
+        { name: "NetAddress", cmd: "GET {{url}}/api/device/netaddress", tip: "NetAddress：取得設備 IP、子網路遮罩與預設閘道。", response: { message: "", data: { ipList: [{ ip: "192.168.1.10", netmask: "255.255.255.0" }], defaultGateWay: "192.168.1.254" } } },
+        { name: "Interface List", cmd: "GET {{url}}/api/interfaces", tip: "Interface List：取得所有網路介面 ID 列表。", response: { message: "", data: ["5001","5002","5003"] } },
+        { name: "Interface Info", cmd: "GET {{url}}/api/interfaces/{{portId}}", tip: "Interface Info：取得指定 Port 的狀態與描述。", response: { message: "", data: { interfaceDescript: "ge5", interfaceStatus: "1", interfaceId: "5005", speed: "1G", stpPortState: 5 } } },
+        { name: "Interface Stats", cmd: "GET {{url}}/api/interfaces/{{portId}}/stats", tip: "Interface Stats：取得指定 Port 的流量統計資料。", response: { message: "", data: { interfaceId: "5005", speed: "1G", inOctets: "240257718", outOctets: "45527573", inUcastPkts: "537603", outUcastPkts: "519711" } } },
+        { name: "PoE Status", cmd: "GET {{url}}/api/interfaces/poeStatus", tip: "PoE Status：取得所有 Port 的 PoE 狀態。", response: { portIndex: "5001", port: "ge1", enableMode: "enable" } },
+        { name: "VLAN List", cmd: "GET {{url}}/api/vlans", tip: "VLAN List：取得 VLAN 設定資訊。", response: { message: "", data: [{ vlanID: "1", vlanName: "default" }] } },
+        { name: "LLDP Stats", cmd: "GET {{url}}/api/lldp", tip: "LLDP Stats：取得鄰居設備資訊。", response: { message: "", data: { chassisId: "00:e0:b3:47:af:c8" } } }
+    ],
+    type3: [
+        { name: "Port Enable", cmd: "POST {{url}}/api/interfaces/{{portId}}/enable", tip: "Port Enable：啟用指定 Port。", response: { message: "success" } },
+        { name: "Port Disable", cmd: "POST {{url}}/api/interfaces/{{portId}}/disable", tip: "Port Disable：停用指定 Port。", response: { message: "success" } },
+        { name: "PoE On", cmd: "POST {{url}}/api/interfaces/{{portId}}/poweron", tip: "PoE On：開啟指定 Port 的 PoE 功能。", response: { message: "success" } },
+        { name: "PoE Off", cmd: "POST {{url}}/api/interfaces/{{portId}}/poweroff", tip: "PoE Off：關閉指定 Port 的 PoE 功能。", response: { message: "success" } },
+        { name: "Reboot", cmd: "POST {{url}}/api/device/reboot", tip: "Reboot：重新啟動設備。", response: { message: "success" } }
+    ]
+};
+
+// 更新 IP 和 Port ID
+function updateIp() {
+    const ipInput = document.getElementById('ipAddress').value.trim();
+    if (ipInput) userIp = ipInput;
+}
+function updatePortId() {
+    const portInput = document.getElementById('portId').value.trim();
+    if (portInput) userPortId = portInput;
+}
+
+// 顯示類型並切換高亮
+function showCategory(type) {
+    // 移除所有 active
+    document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+    // 加上 active
+    const clickedItem = document.querySelector(`.menu-item[onclick="showCategory('${type}')"]`);
+    if (clickedItem) clickedItem.classList.add('active');
+
+    const content = document.getElementById('contentArea');
+    content.innerHTML = `
+        <h2>${type === 'type1' ? 'Login / Logout' : type === 'type2' ? 'GET APIs' : 'POST APIs'}</h2>
+        <div class="ip-input">
+            <label>請輸入設備 IP Address：</label>
+            <input type="text" id="ipAddress" value="${userIp}" oninput="updateIp()">
+        </div>
+        <div class="port-input">
+            <label>請輸入 Interface/Port ID：</label>
+            <input type="text" id="portId" value="${userPortId}" oninput="updatePortId()">
+        </div>
+    `;
+    apiData[type].forEach((api, index) => {
+        const block = document.createElement('div');
+        block.className = 'api-block';
+        block.innerHTML = `
+            <button 
+                onmouseover="showHelp('${api.tip}')" 
+                onmouseout="resetHelp()" 
+                onclick="showApi(${index}, '${type}')">${api.name}</button>
+            <button class="copy-btn" onclick="copyCmd(${index}, '${type}')">複製 API CMD</button>
+            <div class="result" id="cmd-${type}-${index}"></div>
+            <div class="result" id="resp-${type}-${index}"></div>
+        `;
+        content.appendChild(block);
+    });
+}
+
+// 顯示 API CMD 和 Response（加上 Loading 旋轉圖示）
+function showApi(index, type) {
+    const cmdDiv = document.getElementById(`cmd-${type}-${index}`);
+    const respDiv = document.getElementById(`resp-${type}-${index}`);
+    
+    const api = apiData[type][index];
+    let cmdWithIp = api.cmd.replace("{{url}}", `http://${userIp}`);
+    cmdWithIp = cmdWithIp.replace("{{portId}}", userPortId);
+    
+    cmdDiv.innerText = `API CMD:\n${cmdWithIp}`;
+    respDiv.innerHTML = `<div class="spinner"></div>Receiving...`;
+    
+    setTimeout(() => {
+        respDiv.innerText = `Response:\n${JSON.stringify(api.response, null, 2)}`;
+    }, 888);
+}
+
+// 複製 API CMD
+function copyCmd(index, type) {
+    const api = apiData[type][index];
+    let cmdWithIp = api.cmd.replace("{{url}}", `http://${userIp}`);
+    cmdWithIp = cmdWithIp.replace("{{portId}}", userPortId);
+    navigator.clipboard.writeText(cmdWithIp).then(() => {
+        alert("API CMD 已複製到剪貼簿！");
+    });
+}
+
+// Help and Tips 功能（淡入淡出動畫）
+function showHelp(text) {
+    const helpBox = document.getElementById('helpBox');
+    helpBox.style.opacity = 0;
+    setTimeout(() => {
+        helpBox.innerText = text;
+        helpBox.style.opacity = 1;
+    }, 200);
+}
+function resetHelp() {
+    const helpBox = document.getElementById('helpBox');
+    helpBox.style.opacity = 0;
+    setTimeout(() => {
+        helpBox.innerText = "Help & Tips \n\n請點選右側各項 API 功能的按鈕:\n\n 1. 可查看(及複製)該功能之 API CMD 指令內容。\n\n 2. 可得知交換機收到該 API CMD 後的回應資料與格式。";
+        helpBox.style.opacity = 1;
+    }, 200);
+}
+</script>
+</body>
+</html>
