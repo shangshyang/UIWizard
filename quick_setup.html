@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Quick Setup - Step 1: System Information</title>
+    <style>
+        body { 
+            background: url('../right_frame.gif') repeat; 
+            font-family: Arial, sans-serif; 
+            font-size: 12px; 
+            margin: 20px; 
+        }
+        table { 
+            border-collapse: collapse; 
+            width: 421px; 
+            margin: 20px auto; 
+        }
+        td { 
+            border: 2px solid #555; 
+            padding: 8px; 
+            text-align: left; 
+            font-size: 14px;
+            font-weight: bold
+        }
+        input[type="text"], input[type="password"] { 
+            width: 200px; 
+            padding: 5px; 
+        }
+        input[type="button"] { 
+            padding: 6px 15px; 
+            background: #304b67; 
+            color: #fff; 
+            border: none; 
+            cursor: pointer; 
+			margin-top: 10px;
+            font-size: 15px
+        }
+        .style1 { 
+            font-weight: bold; 
+            color: #2c3e50; 
+            font-size: 14px; 
+            margin: 10px 0; 
+            text-align: left;
+        }
+        div[align="center"] { text-align: center; }
+        div[align="right"] { text-align: right; padding-right: 10px; }
+    </style>
+    <script language="JavaScript" src="../focus.js"></script>
+    <script language="JavaScript">
+        (function(){
+            function load(){
+                var forms = document.getElementsByTagName('form');
+                for(var i = 0 ; i < forms.length ; i++){
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'c_t');
+                    input.setAttribute('value', 'd6194abd5e0841f6932dd999b0afbd34');
+                    forms[i].appendChild(input);
+                }
+            }
+            window[ window.addEventListener ? 'addEventListener' : 'attachEvent' ]( window.addEventListener ? 'load' : 'onload', load )
+        })()
+
+        // 按下 Next Step 跳轉到下一步
+        function goToNextStep() {
+            // 可在這裡加入表單驗證（例如檢查密碼是否一致），目前直接跳轉
+            parent.mainFrame.location.href = 'quick_setup_step_2.html';
+        }
+    </script>
+    
+</head>
+<body>
+    <form name="form1" method="post" action="">
+
+        <p class="style1">Step 1: System Information</p>
+
+        <table width="421" border="1" cellspacing="0" align="left">
+            <tr>
+                <td width="150" height="25" style="background-color:#ccc"><div align="left">System Name:</div></td>
+                <td width="267"><div align="center"><input name="sysname" type="text" size="20" value="EW_SW_205"></div></td>
+            </tr>
+			<tr>
+                <td width="150" height="25" style="background-color:#ccc"><div align="left">Description:</div></td>
+                <td><div align="center"><input type="text" size="35" name="desc" value="EtherWAN EX78900" maxlength="255"></div></td>
+            </tr>
+            <tr>
+                <td height="25" style="background-color:#ccc">Location:</td>
+                <td><div align="center"><input type="text" size="35" name="location" value="API LAB No.205" maxlength="255"></div></td>
+            </tr>
+			<tr>
+                <td height="25" style="background-color:#ccc">Contact:</td>
+                <td><div align="center"><input type="text" size="35" name="contact" value="02-6629-8986" maxlength="255"></div></td>
+            </tr>
+            <tr>
+                <td colspan="2"><div align="right"><input type="button" value="Next Step" onclick="goToNextStep()"></div>&nbsp;</td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
