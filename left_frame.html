@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="menu.js"></script>
+    <style>
+        /* Tooltip 樣式 */
+        .tooltip-box {
+            position: absolute;
+            background: #fff;
+            color: #333;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+    </style>
+	<script>
+	function showMessage() {
+		alert('\nOther pages are for DEMO only. Click "Setup Wizard" to start. \n\n請點選由 "Setup Wizard" 頁面開始。'); // 顯示文字訊息
+		}
+
+        // Tooltip 功能
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-box';
+            document.body.appendChild(tooltip);
+
+            document.querySelectorAll('[data-tooltip]').forEach(function(el) {
+                el.addEventListener('mouseover', function() {
+                    tooltip.innerHTML = el.getAttribute('data-tooltip');
+                    tooltip.style.display = 'block';
+                });
+                el.addEventListener('mousemove', function(e) {
+                    tooltip.style.top = (e.pageY + 10) + 'px';
+                    tooltip.style.left = (e.pageX + 10) + 'px';
+                });
+                el.addEventListener('mouseout', function() {
+                    tooltip.style.display = 'none';
+                });
+            });
+        });
+	</script>
+</head>
+<body>
+<div id="sidebar">
+	<!-- Setup Wizard with icon -->
+	<div class="menu-folder" onclick="toggleFolder(this)" data-tooltip="歡迎體驗 Setup Wizard 功能"><h3> Setup Wizard</h3></div>
+    <div class="submenu">
+        <!-- ✅ 加上 data-tooltip 屬性 -->
+        <div class="menu-item" onclick="loadPage('quick_setup.html')" data-tooltip="快速設定交換機基本功能">Quick Setup</div>
+        <div class="menu-item" onclick="loadPage('vlan_configuration.html')" data-tooltip="簡易設定 VLAN 相關參數">VLAN Configuration</div>
+        <div class="menu-item" onclick="loadPage('api_guide.html')" data-tooltip="查看 RESTful API 使用指南">API Guider</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">System</div>
+    <div class="submenu">
+        <div class="menu-item active" onclick="loadPage('system_info.html')">System Information</div>
+        <div class="menu-item" onclick="showMessage()">System Name/Password</div>
+        <div class="menu-item" onclick="showMessage()">IP Address</div>
+        <div class="menu-item" onclick="showMessage()">IPv6 Address</div>
+        <div class="menu-item" onclick="showMessage()">Management Interface</div>
+        <div class="menu-item" onclick="showMessage()">Save Configuration</div>
+        <div class="menu-item" onclick="showMessage()">Firmware Upgrade</div>
+        <div class="menu-item" onclick="showMessage()">Reboot</div>
+        <div class="menu-item" onclick="showMessage()">Logout</div>
+        <div class="menu-item" onclick="showMessage()">User Account</div>
+        <div class="menu-item" onclick="showMessage()">User Privilege</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">Diagnostics</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Utilization</div>
+        <div class="menu-item" onclick="showMessage()">System Log</div>
+        <div class="menu-item" onclick="showMessage()">Remote Logging</div>
+        <div class="menu-item" onclick="showMessage()">ARP Table</div>
+        <div class="menu-item" onclick="showMessage()">Route Table</div>
+        <div class="menu-item" onclick="showMessage()">Alarm Setting</div>
+        <div class="menu-item" onclick="showMessage()">Email Alert</div>
+        <div class="menu-item" onclick="showMessage()">Digital IO-Setting</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">Port</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Configuration</div>
+        <div class="menu-item" onclick="showMessage()">Port Status</div>
+        <div class="menu-item" onclick="showMessage()">Rate Control</div>
+        <div class="menu-item" onclick="showMessage()">RMON Statistics</div>
+        <div class="menu-item" onclick="showMessage()">Per Port VLAN Activities</div>
+        <div class="menu-item" onclick="showMessage()">Port Security</div>
+        <div class="menu-item" onclick="showMessage()">Port Auto-Shutdown</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">Switching</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Bridging</div>
+        <div class="menu-item" onclick="showMessage()">Loopback Detect</div>
+        <div class="menu-item" onclick="showMessage()">Storm Detect</div>
+        <div class="menu-item" onclick="showMessage()">Static MAC Entry</div>
+        <div class="menu-item" onclick="showMessage()">Port Mirroring</div>
+        <div class="menu-item" onclick="showMessage()">Link State Tracking</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">Trunking</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Port Trunking</div>
+        <div class="menu-item" onclick="showMessage()">LACP Trunking</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">STP/Ring</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Global Configuration</div>
+        <div class="menu-item" onclick="showMessage()">RSTP Port Setting</div>
+        <div class="menu-item" onclick="showMessage()">MSTP Properties</div>
+        <div class="menu-item" onclick="showMessage()">MSTP Instance Setting</div>
+        <div class="menu-item" onclick="showMessage()">MSTP Port Setting</div>
+        <div class="menu-item" onclick="showMessage()">Alpha Ring Setting</div>
+        <div class="menu-item" onclick="showMessage()">Alpha Chain Setting</div>
+        <div class="menu-item" onclick="showMessage()">Chain Pass-Through Setting</div>
+        <div class="menu-item" onclick="showMessage()">Advanced Setting</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">VLAN</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">VLAN Setting</div>
+        <div class="menu-item" onclick="showMessage()">Port Setting</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">QoS</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Global Configuration</div>
+        <div class="menu-item" onclick="showMessage()">802.1p Priority</div>
+        <div class="menu-item" onclick="showMessage()">DSCP</div>
+        <div class="menu-item" onclick="showMessage()">ACL Information</div>
+        <div class="menu-item" onclick="showMessage()">ACL Configuration</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">ACL</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">IP ACL</div>
+        <div class="menu-item" onclick="showMessage()">Port ACL Settings</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">SNMP</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">SNMP General Setting</div>
+        <div class="menu-item" onclick="showMessage()">SNMP v1/v2</div>
+        <div class="menu-item" onclick="showMessage()">SNMP v3</div>
+        <div class="menu-item" onclick="showMessage()">SNMP v3 View</div>
+        <div class="menu-item" onclick="showMessage()">SNMP v3 Group</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">AAA</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Radius Configuration</div>
+        <div class="menu-item" onclick="showMessage()">Port Authentication</div>
+        <div class="menu-item" onclick="showMessage()">TACACS+</div>
+        <div class="menu-item" onclick="showMessage()">DoS</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">LLDP</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">LLDP General Settings</div>
+        <div class="menu-item" onclick="showMessage()">LLDP Port Settings</div>
+        <div class="menu-item" onclick="showMessage()">LLDP Neighbors</div>
+        <div class="menu-item" onclick="showMessage()">LLDP Statistics</div>
+        <div class="menu-item" onclick="showMessage()">LLDP MED Network Policy</div>
+        <div class="menu-item" onclick="showMessage()">LLDP MED Location ID</div>
+        <div class="menu-item" onclick="showMessage()">LLDP MED Port Settings</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">Routing</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">Static Route</div>
+        <div class="menu-item" onclick="showMessage()">Routing Table</div>
+        <div class="menu-item" onclick="showMessage()">Route Map</div>
+        <div class="menu-item" onclick="showMessage()">Proxy ARP</div>
+        <div class="menu-item" onclick="showMessage()">VRRP</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">OSPF</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">OSPF Configuration</div>
+        <div class="menu-item" onclick="showMessage()">Stub Area Configuration</div>
+        <div class="menu-item" onclick="showMessage()">NSSA Configuration</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Network</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Interface</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Virtual Link</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Redistribute</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Area Range</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Neighbor</div>
+        <div class="menu-item" onclick="showMessage()">OSPF Route</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">RIP</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">RIP General Settings</div>
+        <div class="menu-item" onclick="showMessage()">RIP Port Settings</div>
+        <div class="menu-item" onclick="showMessage()">RIP Route</div>
+        <div class="menu-item" onclick="showMessage()">RIP Network</div>
+        <div class="menu-item" onclick="showMessage()">RIP Neighbor</div>
+        <div class="menu-item" onclick="showMessage()">RIP Passive</div>
+        <div class="menu-item" onclick="showMessage()">RIP Redistribute</div>
+    </div>
+
+    <div class="menu-folder" onclick="toggleFolder(this)">Other Protocols</div>
+    <div class="submenu">
+        <div class="menu-item" onclick="showMessage()">IGMP Snooping</div>
+        <div class="menu-item" onclick="showMessage()">GVRP</div>
+        <div class="menu-item" onclick="showMessage()">GMRP</div>
+        <div class="menu-item" onclick="showMessage()">NTP</div>
+        <div class="menu-item" onclick="showMessage()">PTP</div>
+        <div class="menu-item" onclick="showMessage()">DHCP Server</div>
+        <div class="menu-item" onclick="showMessage()">DHCP Relay</div>
+        <div class="menu-item" onclick="showMessage()">DHCP Snooping</div>
+        <div class="menu-item" onclick="showMessage()">DAI(Dynamic ARP Inspection)</div>
+        <div class="menu-item" onclick="showMessage()">IPSG(IP Source Guard)</div>
+        <div class="menu-item" onclick="showMessage()">sFlow</div>
+        <div class="menu-item" onclick="showMessage()">MODBUS</div>
+    </div>
+</div>
+</body>
+</html>
