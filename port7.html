@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>RMON Statistics - Port Monitoring</title>
+    <style>
+        body { 
+            background: url('../right_frame.gif') repeat; 
+            font-family: Arial, sans-serif; 
+            font-size: 12px; 
+            margin: 20px; 
+            color: #000; 
+        }
+        table { 
+            border-collapse: collapse; 
+            margin: 20px auto; 
+        }
+        td { 
+            border: 1px solid #ccc; 
+            padding: 6px 10px; 
+            text-align: left; 
+        }
+        a { 
+            color: #0000CC; 
+            text-decoration: none; 
+        }
+        a:hover { 
+            color: #0000FF; 
+            text-decoration: underline; 
+        }
+        .port-header td { 
+            background: #f0f0f0; 
+            font-weight: bold; 
+        }
+        .stats-title { 
+            font-weight: bold; 
+            font-size: 14px; 
+            margin: 15px 0 10px; 
+            text-align: left; 
+            color: #2c3e50; 
+        }
+        .note { 
+            font-style: italic; 
+            color: #666; 
+            text-align: center; 
+            margin: 10px 0; 
+        }
+        input[type="submit"], input[type="button"] { 
+            padding: 6px 15px; 
+            background: #304b67; 
+            color: #fff; 
+            border: none; 
+            cursor: pointer; 
+            margin-left: 10px;
+        }
+        .align-right { 
+            text-align: right; 
+            padding-right: 20px; 
+        }
+    </style>
+    <script language="JavaScript" src="../focus.js"></script>
+    <script language="JavaScript">
+        (function(){
+            function load(){
+                var forms = document.getElementsByTagName('form');
+                for(var i = 0 ; i < forms.length ; i++){
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'c_t');
+                    input.setAttribute('value', 'e3765409573c48e09d2067244cf31be8');
+                    forms[i].appendChild(input);
+                }
+            }
+            window[ window.addEventListener ? 'addEventListener' : 'attachEvent' ]( window.addEventListener ? 'load' : 'onload', load )
+        })()
+
+        // 重新載入當前頁面（Refresh 功能）
+        function refreshPage() {
+            location.reload();
+        }
+		
+		function showMessage() {
+			alert('\nClear button is for DEMO only. \n\n此版本的 Clear 按鈕目前僅作為示意之用。'); // 顯示文字訊息
+		}
+    </script>
+</head>
+<body>
+    <p class="stats-title">RMON Statistics</p>
+
+    <!-- 端口選擇表格 -->
+    <form name="form1" method="post">
+
+        <p class="stats-title">Port 7/ge7 Statistics</p>
+
+        <!-- 統計表格 -->
+        <table width="513" border="1" cellspacing="0" align="left">
+            <tr><td width="336">Drop Events</td><td width="167">0</td></tr>
+            <tr><td>Broadcast Packets Received</td><td>0</td></tr>
+            <tr><td>Multicast Packets Received</td><td>0</td></tr>
+            <tr><td>Undersize Packets Received</td><td>0</td></tr>
+            <tr><td>Oversize Packets Received</td><td>0</td></tr>
+            <tr><td>Fragments Packets Received</td><td>0</td></tr>
+            <tr><td>64-byte Packets Received</td><td>0</td></tr>
+            <tr><td>65 to 127-byte Packets Received</td><td>0</td></tr>
+            <tr><td>128 to 255-byte Packets Received</td><td>0</td></tr>
+            <tr><td>256 to 511-byte Packets Received</td><td>0</td></tr>
+            <tr><td>512 to 1023-byte Packets Received</td><td>0</td></tr>
+            <tr><td>1024 to Maximum Packets Received</td><td>0</td></tr>
+            <tr><td>Jabber Packets</td><td>0</td></tr>
+            <tr><td>Bytes Received</td><td>0</td></tr>
+            <tr><td>Packets Received</td><td>0</td></tr>
+            <tr><td>Collisions</td><td>0</td></tr>
+            <tr><td>CRC/Alignment Errors Received</td><td>0</td></tr>
+            <tr><td>TX No Errors</td><td>0</td></tr>
+            <tr><td>RX No Errors</td><td>0</td></tr>
+            <tr>
+                <td colspan="2">
+                    <p class="note">Statistics will be refreshed every 30 seconds after Clear or Refresh clicked.</p>
+                    <div class="align-right">
+                        <input type="submit" name="Clear" value="Clear" onclick="showMessage();">
+                        <input type="hidden" name="clearPort" value="1">
+                        <input type="button" value="Refresh" onclick="refreshPage();">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
