@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+	body { margin:0; background:#002850; height:110px; overflow:hidden; }
+	.logo { position:absolute; left:30px; top:10px; height:80px; }
+	.panel { margin-left:200px;padding-top:15px;text-align:center; }
+	.port-group { display:inline-block;margin:0 30px;vertical-align:top; }
+	.port-label {
+		color: #ffd700;
+		font-weight: bold;
+		margin-bottom: 5px;
+		text-shadow: 0 0 8px #ff0;
+	}
+	.ports-row {
+		/* display:flex; */
+		gap: 8px;
+		justify-content: center;
+	}
+	.ports-long {
+		max-width: 300px;
+		display: block;
+	}
+	.ports-short {
+		max-width: 100px;
+		display: block;
+	}
+	.port {
+		float: left;
+		margin: 0px 0 5px 5px;
+		width: 38px;
+		height: 38px;
+		background: #0088cc;
+		border-radius: 8px;
+		position: relative;
+		display: block;
+		box-shadow: inset 0 2px 8px rgba(255,255,255,255,0.4),0 3px 6px rgba(0,0,0,0.7);
+		color: #fff;
+		font-weight: bold;
+		line-height: 38px;
+		font-size: 14px;
+	}
+	.port.yellow { background: #ffcc00; color: #000; }
+	.led {
+		/* width: 10px;
+		height: 10px; */
+		border-radius: 50%;
+		background: #666;
+		position: absolute;
+		/* bottom: 4px; */
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	.led.green { background: #0f0; box-shadow: 0 0 12px #0f0; }
+	.led.yellow { background: #ff0; box-shadow: 0 0 12px #ff0; }
+	.quickled {
+		/* width: 10px;
+		height: 10px; */
+		border-radius: 50%;
+		background: #666;
+		position: absolute;
+		/* bottom: 4px; */
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+    /* Tooltip 樣式 */
+    .tooltip-box {
+        position: absolute;
+        background: #fff;
+        color: #333;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 9999;
+        display: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+</style>
+</head>
+
+<body>
+<img src="img/logo.png" alt="EtherWAN" class="logo">
+<form name="form1" method="post">
+<div style="position:absolute;top:15px">
+<table height="95" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000" id="Table_01">
+    <tr> <!-- 加上 data-tooltip 屬性 -->
+        <img src="img/ge_start_str.gif" style="LEFT:200px; POSITION:absolute; TOP:3px">
+		<img src="img/green-light.gif" style="LEFT:210px; POSITION:absolute; TOP:50px"> <!-- 左邊電源燈號1 -->
+        <img src="img/gray-light.gif" style="LEFT:210px; POSITION:absolute; TOP:62px"> <!-- 左邊電源燈號2 -->
+        <img src="img/gray-light.gif" style="LEFT:210px; POSITION:absolute; TOP:74px"> <!-- 左邊電源燈號3 -->
+        <img src="img/ge_mid_top.png" style="LEFT:259px; POSITION:absolute; TOP:3px">
+        <img src="img/ge_mid_bottom.png" style="LEFT:259px; POSITION:absolute; TOP:50px">
+		<img src="img/ge_mid_top.png" style="LEFT:296px; POSITION:absolute; TOP:3px">
+		<img src="img/ge_mid_bottom.png" style="LEFT:296px; POSITION:absolute; TOP:50px">
+		<img src="img/ge_mid_top.png" style="LEFT:333px; POSITION:absolute; TOP:3px">
+		<img src="img/ge_mid_bottom.png" style="LEFT:333px; POSITION:absolute; TOP:50px">
+		<img src="img/ge_mid_top.png" style="LEFT:370px; POSITION:absolute; TOP:3px">
+		<img src="img/ge_mid_bottom.png" style="LEFT:370px; POSITION:absolute; TOP:50px">
+		<img src="img/ge_mid_top.png" style="LEFT:407px; POSITION:absolute; TOP:3px">
+		<img src="img/ge_mid_bottom.png" style="LEFT:407px; POSITION:absolute; TOP:50px">
+		<img src="img/ge_mid_top.png" style="LEFT:444px; POSITION:absolute; TOP:3px">
+		<img src="img/ge_mid_bottom.png" style="LEFT:444px; POSITION:absolute; TOP:50px">
+		<img src="img/port_01.gif" onclick="loadPage('port1.html')" style="LEFT:267px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_02.gif" onclick="loadPage('port2.html')" style="LEFT:267px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_03.gif" onclick="loadPage('port3.html')" style="LEFT:304px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_04.gif" onclick="loadPage('port4.html')" style="LEFT:304px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_05.gif" onclick="loadPage('port5.html')" style="LEFT:341px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_06.gif" onclick="loadPage('port6.html')" style="LEFT:341px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_07.gif" onclick="loadPage('port7.html')" style="LEFT:378px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_08.gif" onclick="loadPage('port8.html')" style="LEFT:378px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_09.gif" onclick="loadPage('port9.html')" style="LEFT:415px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_10.gif" onclick="loadPage('port10.html')" style="LEFT:415px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_11.gif" onclick="loadPage('port11.html')" style="LEFT:452px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_12.gif" onclick="loadPage('port12.html')" style="LEFT:452px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/10G_text_S.gif" style="LEFT:481px; POSITION:absolute; TOP:3px">
+		<img src="img/10G_top.png" style="LEFT:531px; POSITION:absolute; TOP:3px">
+		<img src="img/10G_bottom.png" style="LEFT:531px; POSITION:absolute; TOP:50px">
+		<img src="img/10G_top.png" style="LEFT:568px; POSITION:absolute; TOP:3px">
+		<img src="img/10G_bottom.png" style="LEFT:568px; POSITION:absolute; TOP:50px">
+		<img src="img/port_01.gif" onclick="loadPage('port13.html')" style="LEFT:539px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_02.gif" onclick="loadPage('port14.html')" style="LEFT:539px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_03.gif" onclick="loadPage('port15.html')" style="LEFT:576px; POSITION:absolute; TOP:17px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/port_04.gif" onclick="loadPage('port16.html')" style="LEFT:576px; POSITION:absolute; TOP:58px" data-tooltip="Click here to view RMON statistics for each port.">
+		<img src="img/split_blank.JPG" style="LEFT:605px; POSITION:absolute; TOP:3px">
+		<img src="img/green-light.gif" style="LEFT:278px; POSITION:absolute; TOP:45px" class="led"><!--ge1-->
+		<img src="img/gray-light.gif" style="LEFT:275px; POSITION:absolute; TOP:85px"><!--ge2-->
+        <img src="img/green-light.gif" style="LEFT:312px; POSITION:absolute; TOP:45px" class="led"><!--ge3-->
+        <img src="img/green-light.gif" style="LEFT:312px; POSITION:absolute; TOP:85px" class="led"><!--ge4-->
+        <img src="img/gray-light.gif" style="LEFT:349px; POSITION:absolute; TOP:45px"><!--ge5-->
+        <img src="img/gray-light.gif" style="LEFT:349px; POSITION:absolute; TOP:85px"><!--ge6-->
+		<img src="img/gray-light.gif" style="LEFT:386px; POSITION:absolute; TOP:45px"><!--ge7-->
+		<img src="img/green-light.gif" style="LEFT:386px; POSITION:absolute; TOP:85px" class="slowled"><!--ge8-->
+		<img src="img/gray-light.gif" style="LEFT:423px; POSITION:absolute; TOP:45px"><!--ge9-->
+		<img src="img/green-light.gif" style="LEFT:423px; POSITION:absolute; TOP:85px" class="slowled"><!--ge10-->
+		<img src="img/green-light.gif" style="LEFT:460px; POSITION:absolute; TOP:45px" class="slowled"><!--ge11-->
+		<img src="img/gray-light.gif" style="LEFT:460px; POSITION:absolute; TOP:85px"><!--ge12-->
+        <img src="img/green-light.gif" style="LEFT:547px; POSITION:absolute; TOP:45px" class="quickled"><!--xe1-->
+        <img src="img/green-light.gif" style="LEFT:547px; POSITION:absolute; TOP:85px" class="quickled"><!--xe2-->
+        <img src="img/gray-light.gif" style="LEFT:584px; POSITION:absolute; TOP:45px"><!--xe3-->
+        <img src="img/gray-light.gif" style="LEFT:584px; POSITION:absolute; TOP:85px"><!--xe4-->
+    </tr>
+</table>
+</div>
+</form>
+
+<script>
+  // 讓 onclick 找得到：掛在 topFrame 的 window 上
+  window.loadPage = function(url) {
+    // 拿到最外層（frameset 的） mainFrame
+    const main = window.top.frames['mainFrame'];
+    if (!main) {
+      console.error('找不到 mainFrame，請確認 frameset 的 name="mainFrame" 是否正確');
+      return;
+    }
+    main.location.href = url; // 直接導頁
+  };
+
+  // ✅ 閃爍效果：綠色與灰色切換
+  const leds = document.querySelectorAll('.led');
+  leds.forEach((led, index) => {
+    let isGreen = led.src.includes('green-light.gif');
+    setInterval(() => {
+      led.src = isGreen ? 'img/gray-light.gif' : 'img/green-light.gif';
+      isGreen = !isGreen;
+    }, 110 + index * 10); // 每個燈號速度稍微不同，避免同步閃爍
+  });
+  
+  const quickleds = document.querySelectorAll('.quickled');
+  quickleds.forEach((quickled, index) => {
+    let isGreenquick = quickled.src.includes('green-light.gif');
+    setInterval(() => {
+      quickled.src = isGreenquick ? 'img/gray-light.gif' : 'img/green-light.gif';
+      isGreenquick = !isGreenquick;
+    }, 55 + index * 10); // 每個燈號速度稍微不同，避免同步閃爍
+  });
+  
+  const slowleds = document.querySelectorAll('.slowled');
+  slowleds.forEach((slowled, index) => {
+    let isGreenslow = slowled.src.includes('green-light.gif');
+    setInterval(() => {
+      slowled.src = isGreenslow ? 'img/gray-light.gif' : 'img/green-light.gif';
+      isGreenslow = !isGreenslow;
+    }, 880 + index * 500); // 每個燈號速度稍微不同，避免同步閃爍
+  });
+  
+  // ✅ Tooltip 功能
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltip = document.createElement('div');
+    tooltip.className = 'tooltip-box';
+    document.body.appendChild(tooltip);
+
+    document.querySelectorAll('[data-tooltip]').forEach(function(el) {
+      el.addEventListener('mouseover', function() {
+        tooltip.innerHTML = el.getAttribute('data-tooltip');
+        tooltip.style.display = 'block';
+      });
+      el.addEventListener('mousemove', function(e) {
+        tooltip.style.top = (e.pageY + 10) + 'px';
+        tooltip.style.left = (e.pageX + 10) + 'px';
+      });
+      el.addEventListener('mouseout', function() {
+        tooltip.style.display = 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>
