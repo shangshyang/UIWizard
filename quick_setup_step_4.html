@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Quick Setup - Step 4: Management Interface</title>
+    <style>
+        body {
+            background: url('../right_frame.gif') repeat;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 370px;
+            margin: 20px auto;
+        }
+        td { 
+            border: 2px solid #555; 
+            padding: 8px; 
+            text-align: left; 
+            font-size: 14px;
+            font-weight: bold
+        }
+        select { padding: 5px; }
+        input[type="button"] {
+            padding: 6px 15px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            font-size: 15px;
+            background: #304b67; 
+        }
+        div[align="center"] { text-align: center; }
+        div[align="right"] { text-align: right; padding-right: 10px; }
+        .style1 { 
+            font-weight: bold; 
+            color: #2c3e50; 
+            font-size: 14px; 
+            margin: 10px 0; 
+            text-align: left;
+        }
+        .nav-buttons {
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+        }
+    </style>
+    <script language="JavaScript" src="../focus.js"></script>
+    <script language="JavaScript">
+        (function(){
+            function load(){
+                var forms = document.getElementsByTagName('form');
+                for(var i = 0 ; i < forms.length ; i++){
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'hidden');
+                    input.setAttribute('name', 'c_t');
+                    input.setAttribute('value', '15233de122224a40b8ed54cf263367c0');
+                    forms[i].appendChild(input);
+                }
+            }
+            window[ window.addEventListener ? 'addEventListener' : 'attachEvent' ]( window.addEventListener ? 'load' : 'onload', load )
+        })()
+
+        function telnetcfg(){ document.CtrlTelnet.submit(); }
+        function httpscfg(){
+            var answer = confirm("The Http/Https Server will be restart and need to relogin again, do you want to continue?");
+            if(answer){
+                document.CtrlHttps.submit();
+            }
+        }
+        function sshcfg(){ document.CtrlSSH.submit(); }
+
+        function goToPrevStep() {
+            parent.mainFrame.location.href = 'quick_setup_step_3.html';
+        }
+
+        function goToNextStep() {
+            parent.mainFrame.location.href = 'quick_setup_step_5.html'; 
+        }
+    </script>
+</head>
+<body>
+    <p class="style1">Step 4: Management Interface</p>
+
+    <!-- HTTPS -->
+    <form name="CtrlHttps" method="post">
+        <table width="370" border="1" cellspacing="0" align="left">
+            <tr bgcolor="#CCCCCC"><td colspan="2"><div align="center">HTTPS</div></td></tr>
+            <tr><td width="35%"><div align="left">WEB Agent</div></td>
+                <td><div align="center">
+                    <select name='http'>
+                        <option value='0'>None</option>
+                        <option value='1'>Http</option>
+                        <option value='2' selected>Https</option>
+                    </select>
+                </div></td>
+            </tr>
+            <tr><td><div align="left">Login Failure Lock</div></td>
+                <td><div align="center">
+                    <input name='fail_lock' value='0' type='radio'>Disable
+                    <input name='fail_lock' value='1' type='radio' checked>Enable
+                </div></td>
+            </tr>
+<!--        </table>-->
+<!--    </form>-->
+
+    <!-- TELNET -->
+<!--    <form name="CtrlTelnet" method="post">-->
+<!--        <table width="370" border="1" cellspacing="0" align="left" style="margin-top:20px;">-->
+            <tr bgcolor="#CCCCCC"><td colspan="2"><div align="center">TELNET</div></td></tr>
+            <tr><td width="35%"><div align="left">Telnet</div></td>
+                <td><div align="center">
+                    <input name='telnet' value='0' type='radio' checked>Disable
+                    <input name='telnet' value='1' type='radio'>Enable
+                </div></td>
+            </tr>
+<!--        </table>-->
+<!--    </form>-->
+
+    <!-- SSH -->
+<!--    <form name="CtrlSSH" method="post">-->
+<!--        <table width="370" border="1" cellspacing="0" align="left" style="margin-top:20px;">-->
+            <tr bgcolor="#CCCCCC"><td colspan="2"><div align="center">SSH</div></td></tr>
+            <tr><td width="35%"><div align="left">SSH</div></td>
+                <td><div align="center">
+                    <select name="ssh">
+                        <option value="0">Disable</option>
+                        <option value="3" selected>SSHv2</option>
+                    </select>
+                </div></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="nav-buttons">
+                    <input type="button" value="Prev. Step" onclick="goToPrevStep()">
+                    <input type="button" value="Next Step" onclick="goToNextStep()">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
