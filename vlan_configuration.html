@@ -1,0 +1,368 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>VLAN Configuration Wizard</title>
+    <style>
+        body {
+            background: url('../right_frame.gif') repeat;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+            color: #000;
+        }
+        #wizard {
+            background: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            max-width: 400px;
+            margin: auto;
+            border: 5px solid #ccc;
+            /* float: left; */
+            margin-left: 0;
+            margin-right: auto;
+        }
+        #progress {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        #progress table {
+            margin: auto;
+        }
+        #progress td {
+            padding: 0 5px;
+        }
+        #progress .step {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #666;
+            font-weight: bold;
+        }
+        #progress .step.active {
+            background: #304b67;
+            color: white;
+        }
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        .navigation {
+            margin-top: 20px;
+            text-align: right;
+        }
+        button {
+            padding: 8px 16px;
+            margin-left: 10px;
+            font-size: 14px;
+            background: #304b67;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        input[type="text"], select {
+            padding: 5px;
+            margin: 5px 0;
+        }
+        .port-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .port-list th, .port-list td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        .port-list th {
+            background: #e0e0e0;
+            font-weight: bold;
+            /* text-align: center; */
+        }
+        .port-list td {
+            padding: 0px;
+        }
+        .summary table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            background: #fafafa;
+        }
+        .summary th, .summary td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .summary th {
+            background: #e0e0e0;
+            text-align: center;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Tooltip 樣式 */
+        .tooltip-box {
+            position: absolute;
+            background: #333;
+            color: yellow; /* #fff; */
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+    </style>
+
+    <script>
+        var currentStep = 0;
+        var steps, indicators;
+
+        function showStep(n) {
+            for (var i = 0; i < steps.length; i++) {
+                steps[i].classList.remove('active');
+                indicators[i].classList.remove('active');
+            }
+            steps[n].classList.add('active');
+            indicators[n].classList.add('active');
+
+            // 控制 Prev.Step 按鈕顯示
+            document.getElementById('prevBtn').style.display = n === 0 ? 'none' : 'inline-block';
+            document.getElementById('nextBtn').innerHTML = n === (steps.length - 1) ? 'Apply & Finish' : 'Next Step';
+
+            if (n == steps.length - 1) {
+                populateSummary();
+            }
+        }
+
+        function nextPrev(n) {
+            if (n === 1 && !validateCurrentStep()) return false;
+            currentStep += n;
+            if (currentStep >= steps.length) {
+                // 完成設定（可送出表單或顯示訊息）
+                alert("VLAN configuration completed!\nChanges will take effect after applying.");
+                parent.mainFrame.location.href = 'system_info.html';
+                return false;
+            }
+            showStep(currentStep);
+        }
+
+        function validateCurrentStep() {
+            // 各步驟簡單驗證（可擴充）
+            if (currentStep === 0) {
+                var vlanId = document.getElementById('vlan_id').value.trim();
+                var vlanName = document.getElementById('vlan_name').value.trim();
+                if (!vlanId || isNaN(vlanId) || vlanId < 2 || vlanId > 4033) {
+                    alert("Please enter a valid VLAN ID (2-4033).");
+                    return false;
+                }
+                if (vlanName === "") {
+                    alert("Please enter a valid VLAN Name.");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function populateSummary() {
+            var summaryTable = document.getElementById('summary-table').getElementsByTagName('tbody')[0];
+            summaryTable.innerHTML = '';
+
+            // VLAN Info
+            var vlanId = document.getElementById('vlan_id').value;
+            var vlanName = document.getElementById('vlan_name').value;
+            var vlanRow = summaryTable.insertRow();
+            vlanRow.insertCell().innerHTML = '<strong>VLAN ID:</strong>';
+            vlanRow.insertCell().innerHTML = vlanId;
+            var vlanNameRow = summaryTable.insertRow();
+            vlanNameRow.insertCell().innerHTML = '<strong>VLAN Name:</strong>';
+            vlanNameRow.insertCell().innerHTML = vlanName;
+
+            // Ports & Tags
+            var ports = ['ge1','ge2','ge3','ge4','ge5','ge6','ge7','ge8','ge9','ge10','ge11','ge12','xe1','xe2','xe3','xe4'];
+            ports.forEach(function(p) {
+                var checkbox = document.querySelector('input[name="port_' + p + '"]');
+                if (checkbox && checkbox.checked) {
+                    var tag = document.querySelector('select[name="tag_' + p + '"]').value;
+                    var mode = document.querySelector('select[name="mode_' + p + '"]') ? document.querySelector('select[name="mode_' + p + '"]').value : '';
+                    var pvid = document.querySelector('input[name="pvid_' + p + '"]') ? document.querySelector('input[name="pvid_' + p + '"]').value : '';
+                    var row = summaryTable.insertRow();
+                    row.insertCell().innerHTML = '<strong>' + p + '</strong>';
+                    row.insertCell().innerHTML = 'Tag: ' + tag + (mode ? ', Mode: ' + mode : '') + (pvid ? ', PVID: ' + pvid : '');
+                }
+            });
+        }
+
+        // DOM 完全載入後初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            steps = document.getElementsByClassName('step-content');
+            indicators = document.getElementsByClassName('step');
+            showStep(currentStep); // 確保第一次顯示 Prev.Step 隱藏
+            // 建立 Tooltip 元素
+            var tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-box';
+            document.body.appendChild(tooltip);
+
+            // 綁定事件
+            document.querySelectorAll('[data-tooltip]').forEach(function(el) {
+                el.addEventListener('mouseover', function(e) {
+                    tooltip.innerHTML = el.getAttribute('data-tooltip');
+                    tooltip.style.display = 'block';
+                });
+                el.addEventListener('mousemove', function(e) {
+                    tooltip.style.top = (e.pageY + 10) + 'px';
+                    tooltip.style.left = (e.pageX + 10) + 'px';
+                });
+                el.addEventListener('mouseout', function() {
+                    tooltip.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="wizard">
+        <div id="progress">
+            <table>
+                <tr>
+                    <td><span class="step active">1</span></td>
+                    <td><span class="step">2</span></td>
+                    <td><span class="step">3</span></td>
+                    <td><span class="step">4</span></td>
+                </tr>
+            </table>
+        </div>
+        <form id="wizard-form">
+            <!-- Step 1: VLAN Info -->
+            <div class="step-content active" id="step1">
+                <h2>VLAN Info</h2>
+                <div class="summary">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-tooltip="VLAN 範圍 : 2~4033">
+                            <td>VLAN ID:</td>
+                            <td><input type="text" name="vlan_id" placeholder="2 ~ 4033" id="vlan_id" value="" maxlength="4" /></td>
+                        </tr>
+                        <tr data-tooltip="輸入此 VLAN 自訂名稱">
+                            <td>VLAN Name:</td>
+                            <td><input type="text" name="vlan_name" placeholder="此 VLAN 名稱" id="vlan_name" value="" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            
+            <!-- Step 2: Select Ports -->
+            <div class="step-content" id="step2">
+                <h2>Select Ports</h2>
+                <div class="port-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Port</th>
+                                <th data-tooltip="勾選此 Port 以加入此 VLAN">VLAN Member</th>
+                                <th>Tagged or Untagged</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Port 列表 -->
+                            <tr><td>ge1</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge1" /></td><td><select name="tag_ge1"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge2</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge2" /></td><td><select name="tag_ge2"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge3</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge3" /></td><td><select name="tag_ge3"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge4</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge4" /></td><td><select name="tag_ge4"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge5</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge5" /></td><td><select name="tag_ge5"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge6</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge6" /></td><td><select name="tag_ge6"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge7</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge7" /></td><td><select name="tag_ge7"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge8</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge8" /></td><td><select name="tag_ge8"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge9</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge9" /></td><td><select name="tag_ge9"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge10</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge10" /></td><td><select name="tag_ge10"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge11</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge11" /></td><td><select name="tag_ge11"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>ge12</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_ge12" /></td><td><select name="tag_ge12"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>xe1</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_xe1" /></td><td><select name="tag_xe1"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>xe2</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_xe2" /></td><td><select name="tag_xe2"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>xe3</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_xe3" /></td><td><select name="tag_xe3"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                            <tr><td>xe4</td><td data-tooltip="勾選此 Port 以加入此 VLAN"><input type="checkbox" name="port_xe4" /></td><td><select name="tag_xe4"><option value="untagged">Untagged</option><option value="tagged">Tagged</option></select></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Step 3: Port Mode & PVID -->
+            <div class="step-content" id="step3">
+                <h2>VLAN Port Setting</h2>
+                <div class="port-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Port</th>
+                                <th data-tooltip="選擇 Access、Trunk 或 Hybrid">Mode</th>
+                                <th>PVID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>ge1</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge1"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge1" size="5" value="1" /></td></tr>
+                            <tr><td>ge2</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge2"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge2" size="5" value="1" /></td></tr>
+                            <tr><td>ge3</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge3"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge3" size="5" value="1" /></td></tr>
+                            <tr><td>ge4</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge4"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge4" size="5" value="1" /></td></tr>
+                            <tr><td>ge5</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge5"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge5" size="5" value="1" /></td></tr>
+                            <tr><td>ge6</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge6"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge6" size="5" value="1" /></td></tr>
+                            <tr><td>ge7</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge7"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge7" size="5" value="1" /></td></tr>
+                            <tr><td>ge8</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge8"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge8" size="5" value="1" /></td></tr>
+                            <tr><td>ge9</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge9"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge9" size="5" value="1" /></td></tr>
+                            <tr><td>ge10</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge10"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge10" size="5" value="1" /></td></tr>
+                            <tr><td>ge11</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge11"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge11" size="5" value="1" /></td></tr>
+                            <tr><td>ge12</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_ge12"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_ge12" size="5" value="1" /></td></tr>
+                            <tr><td>xe1</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_xe1"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_xe1" size="5" value="1" /></td></tr>
+                            <tr><td>xe2</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_xe2"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_xe2" size="5" value="1" /></td></tr>
+                            <tr><td>xe3</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_xe3"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_xe3" size="5" value="1" /></td></tr>
+                            <tr><td>xe4</td><td data-tooltip="選擇 Access、Trunk 或 Hybrid"><select name="mode_xe4"><option value="access">Access</option><option value="trunk">Trunk</option><option value="hybrid">Hybrid</option></select></td><td><input type="text" name="pvid_xe4" size="5" value="1" /></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Step 4: Review & Apply -->
+            <div class="step-content" id="step4">
+                <h2>Review & Apply</h2>
+                <div class="summary">
+                    <table id="summary-table" data-tooltip="請檢查目前的設定內容是否都正確!?">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 動態填充 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Prev. Step</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next Step</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
